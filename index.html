@@ -5,182 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Something Special ✨</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #1a0533, #2d1b4e, #1a0533);
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    overflow: hidden;
-    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px; overflow: hidden; position: relative;
   }
-  .hearts-bg { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+  .hearts-bg { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
   .heart-float { position:absolute; bottom:-50px; animation:floatUp linear infinite; opacity:0.15; }
-  @keyframes floatUp {
-    0% { transform:translateY(0) rotate(0deg); opacity:0.15; }
-    100% { transform:translateY(-110vh) rotate(20deg); opacity:0; }
-  }
+  @keyframes floatUp { 0%{transform:translateY(0) rotate(0deg);opacity:0.15} 100%{transform:translateY(-110vh) rotate(20deg);opacity:0} }
   .card {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,182,193,0.2);
-    border-radius: 24px;
-    padding: 20px 22px;
-    max-width: 400px;
-    width: 100%;
-    color: white;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 60px rgba(255,100,150,0.1);
-    max-height: 96vh;
-    overflow-y: auto;
+    background:rgba(255,255,255,0.05); backdrop-filter:blur(20px);
+    border:1px solid rgba(255,182,193,0.2); border-radius:24px;
+    padding:20px 22px; max-width:400px; width:100%; color:white;
+    position:relative; z-index:1; box-shadow:0 0 60px rgba(255,100,150,0.1);
+    max-height:96vh; overflow-y:auto;
   }
-  .card::-webkit-scrollbar { display:none; }
-  .card { -ms-overflow-style:none; scrollbar-width:none; }
-  .step { display:none; animation:fadeIn 0.4s ease; }
-  .step.active { display:block; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-  .step-indicator { display:flex; justify-content:center; gap:8px; margin-bottom:14px; }
-  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.15); transition:all 0.3s; }
-  .dot.active { background:#ff6b9d; transform:scale(1.4); }
-  .dot.done { background:rgba(255,107,157,0.4); }
-  .logo { font-size:32px; margin-bottom:6px; text-align:center; }
-  h1 {
-    font-size:18px; font-weight:700; text-align:center;
-    background:linear-gradient(135deg,#ff9a9e,#fad0c4,#ffecd2);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    background-clip:text; margin-bottom:4px; line-height:1.3;
-  }
-  .tagline { font-size:11px; color:rgba(255,200,210,0.5); margin-bottom:14px; line-height:1.5; text-align:center; }
-  .question { font-size:13px; color:rgba(255,220,225,0.9); font-weight:600; margin-bottom:12px; line-height:1.5; text-align:center; }
-  .options { display:flex; flex-direction:column; gap:8px; }
-  .option-btn {
-    background:rgba(255,107,157,0.08); border:1px solid rgba(255,107,157,0.2);
-    border-radius:14px; padding:11px 14px; color:white; font-size:13px; cursor:pointer;
-    transition:all 0.25s; text-align:left; display:flex; align-items:center; gap:10px; width:100%;
-  }
-  .option-btn:hover { background:rgba(255,107,157,0.2); border-color:#ff6b9d; transform:translateY(-1px); }
-  .option-btn .icon { font-size:20px; }
-  .option-btn .title { font-weight:600; font-size:13px; color:#ffd6e0; }
-  .option-btn .desc { font-size:11px; color:rgba(255,200,210,0.45); margin-top:1px; }
-  .form-group { margin-bottom:12px; }
-  .form-group label { display:block; font-size:12px; color:rgba(255,200,210,0.65); margin-bottom:6px; }
-  .form-group input {
-    width:100%; background:rgba(255,107,157,0.08); border:1px solid rgba(255,107,157,0.2);
-    border-radius:12px; padding:10px 14px; color:white; font-size:13px; outline:none;
-    transition:border 0.2s; font-family:inherit;
-  }
-  .form-group input::placeholder { color:rgba(255,200,210,0.25); }
-  .form-group input:focus { border-color:#ff6b9d; }
-  .exp-options { display:flex; flex-direction:column; gap:6px; margin-top:6px; }
-  .exp-btn {
-    background:rgba(255,107,157,0.06); border:1px solid rgba(255,107,157,0.15);
-    border-radius:10px; padding:9px 12px; color:rgba(255,220,225,0.7); font-size:12px;
-    cursor:pointer; transition:all 0.2s; text-align:left; width:100%;
-  }
-  .exp-btn:hover, .exp-btn.selected { background:rgba(255,107,157,0.2); border-color:#ff6b9d; color:white; }
-  .next-btn {
-    width:100%; padding:12px; border:none; border-radius:14px; margin-top:14px;
-    background:linear-gradient(135deg,#ff6b9d,#ff8e53); color:white; font-size:14px;
-    font-weight:700; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(255,107,157,0.3);
-  }
-  .next-btn:hover { opacity:0.9; transform:translateY(-1px); }
-  .connect-options { display:flex; flex-direction:column; gap:10px; }
-  .connect-btn {
-    border-radius:14px; padding:13px 16px; color:white; cursor:pointer;
-    transition:all 0.25s; text-align:center; text-decoration:none; display:block; border:1px solid transparent;
-  }
-  .connect-btn.insta { background:linear-gradient(135deg,rgba(131,58,180,0.25),rgba(253,29,29,0.2),rgba(252,176,69,0.2)); border-color:rgba(255,107,157,0.3); }
-  .connect-btn.whatsapp { background:rgba(37,211,102,0.12); border-color:rgba(37,211,102,0.35); }
-  .connect-btn.number { background:rgba(100,160,255,0.12); border-color:rgba(100,160,255,0.35); }
-  .connect-btn:hover { opacity:0.85; transform:translateY(-2px); }
-  .connect-btn .btn-icon { font-size:22px; display:block; margin-bottom:4px; }
-  .connect-btn .btn-title { font-weight:700; font-size:14px; color:#ffd6e0; }
-  .connect-btn .btn-sub { font-size:11px; color:rgba(255,200,210,0.45); margin-top:2px; }
-  .final-msg { text-align:center; padding:6px 0; }
-  .final-emoji { font-size:50px; margin-bottom:10px; display:block; animation:pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
-  .final-title {
-    font-size:20px; font-weight:700; margin-bottom:10px;
-    background:linear-gradient(135deg,#ff9a9e,#fad0c4,#ffecd2);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    background-clip:text; line-height:1.3;
-  }
-  .final-sub { font-size:13px; color:rgba(255,200,210,0.75); line-height:1.8; margin-bottom:14px; }
-  .final-sub b { color:#ffb3c6; }
-  .heart-line { font-size:18px; display:block; margin:6px 0; }
-  .play-btn {
-    width:100%; padding:13px; border:none; border-radius:14px;
-    background:linear-gradient(135deg,#a18cd1,#fbc2eb); color:white;
-    font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s;
-    box-shadow:0 4px 16px rgba(161,140,209,0.4); margin-bottom:10px;
-  }
-  .play-btn:hover { opacity:0.9; transform:translateY(-1px); }
-  .back-btn {
-    margin-top:10px; background:none; border:1px solid rgba(255,107,157,0.2);
-    border-radius:10px; padding:8px 16px; color:rgba(255,200,210,0.35);
-    font-size:11px; cursor:pointer; display:block; width:100%; transition:all 0.2s;
-  }
-  .back-btn:hover { color:rgba(255,200,210,0.7); border-color:rgba(255,107,157,0.4); }
-  .restart-btn {
-    margin-top:10px; background:rgba(255,107,157,0.12); border:1px solid rgba(255,107,157,0.25);
-    border-radius:12px; padding:10px 16px; color:rgba(255,200,210,0.6); font-size:12px;
-    cursor:pointer; display:block; width:100%; transition:all 0.2s;
-  }
-  .restart-btn:hover { background:rgba(255,107,157,0.2); color:white; }
-  .saving-msg { font-size:11px; color:rgba(255,200,210,0.4); text-align:center; margin-top:8px; min-height:16px; }
+  .card::-webkit-scrollbar{display:none} .card{-ms-overflow-style:none;scrollbar-width:none}
+  .step{display:none;animation:fadeIn 0.4s ease} .step.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .step-indicator{display:flex;justify-content:center;gap:8px;margin-bottom:14px}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s}
+  .dot.active{background:#ff6b9d;transform:scale(1.4)} .dot.done{background:rgba(255,107,157,0.4)}
+  .logo{font-size:32px;margin-bottom:6px;text-align:center}
+  h1{font-size:18px;font-weight:700;text-align:center;background:linear-gradient(135deg,#ff9a9e,#fad0c4,#ffecd2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;line-height:1.3}
+  .tagline{font-size:11px;color:rgba(255,200,210,0.5);margin-bottom:14px;line-height:1.5;text-align:center}
+  .question{font-size:13px;color:rgba(255,220,225,0.9);font-weight:600;margin-bottom:12px;line-height:1.5;text-align:center}
+  .options{display:flex;flex-direction:column;gap:8px}
+  .option-btn{background:rgba(255,107,157,0.08);border:1px solid rgba(255,107,157,0.2);border-radius:14px;padding:11px 14px;color:white;font-size:13px;cursor:pointer;transition:all 0.25s;text-align:left;display:flex;align-items:center;gap:10px;width:100%}
+  .option-btn:hover{background:rgba(255,107,157,0.2);border-color:#ff6b9d;transform:translateY(-1px)}
+  .option-btn .icon{font-size:20px} .option-btn .title{font-weight:600;font-size:13px;color:#ffd6e0} .option-btn .desc{font-size:11px;color:rgba(255,200,210,0.45);margin-top:1px}
+  .form-group{margin-bottom:12px}
+  .form-group label{display:block;font-size:12px;color:rgba(255,200,210,0.65);margin-bottom:6px}
+  .form-group input{width:100%;background:rgba(255,107,157,0.08);border:1px solid rgba(255,107,157,0.2);border-radius:12px;padding:10px 14px;color:white;font-size:13px;outline:none;transition:border 0.2s;font-family:inherit}
+  .form-group input::placeholder{color:rgba(255,200,210,0.25)} .form-group input:focus{border-color:#ff6b9d}
+  .exp-options{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+  .exp-btn{background:rgba(255,107,157,0.06);border:1px solid rgba(255,107,157,0.15);border-radius:10px;padding:9px 12px;color:rgba(255,220,225,0.7);font-size:12px;cursor:pointer;transition:all 0.2s;text-align:left;width:100%}
+  .exp-btn:hover,.exp-btn.selected{background:rgba(255,107,157,0.2);border-color:#ff6b9d;color:white}
+  .next-btn{width:100%;padding:12px;border:none;border-radius:14px;margin-top:14px;background:linear-gradient(135deg,#ff6b9d,#ff8e53);color:white;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(255,107,157,0.3)}
+  .next-btn:hover{opacity:0.9;transform:translateY(-1px)}
+  .connect-options{display:flex;flex-direction:column;gap:10px}
+  .connect-btn{border-radius:14px;padding:13px 16px;color:white;cursor:pointer;transition:all 0.25s;text-align:center;text-decoration:none;display:block;border:1px solid transparent}
+  .connect-btn.insta{background:linear-gradient(135deg,rgba(131,58,180,0.25),rgba(253,29,29,0.2),rgba(252,176,69,0.2));border-color:rgba(255,107,157,0.3)}
+  .connect-btn.whatsapp{background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.35)}
+  .connect-btn.number{background:rgba(100,160,255,0.12);border-color:rgba(100,160,255,0.35)}
+  .connect-btn:hover{opacity:0.85;transform:translateY(-2px)}
+  .connect-btn .btn-icon{font-size:22px;display:block;margin-bottom:4px} .connect-btn .btn-title{font-weight:700;font-size:14px;color:#ffd6e0} .connect-btn .btn-sub{font-size:11px;color:rgba(255,200,210,0.45);margin-top:2px}
+  .final-msg{text-align:center;padding:6px 0}
+  .final-emoji{font-size:50px;margin-bottom:10px;display:block;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+  .final-title{font-size:20px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#ff9a9e,#fad0c4,#ffecd2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3}
+  .final-sub{font-size:13px;color:rgba(255,200,210,0.75);line-height:1.8;margin-bottom:14px}
+  .final-sub b{color:#ffb3c6} .heart-line{font-size:18px;display:block;margin:6px 0}
+  .play-btn{width:100%;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,#a18cd1,#fbc2eb);color:white;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(161,140,209,0.4);margin-bottom:10px}
+  .play-btn:hover{opacity:0.9;transform:translateY(-1px)}
+  .back-btn{margin-top:10px;background:none;border:1px solid rgba(255,107,157,0.2);border-radius:10px;padding:8px 16px;color:rgba(255,200,210,0.35);font-size:11px;cursor:pointer;display:block;width:100%;transition:all 0.2s}
+  .back-btn:hover{color:rgba(255,200,210,0.7);border-color:rgba(255,107,157,0.4)}
+  .restart-btn{margin-top:10px;background:rgba(255,107,157,0.12);border:1px solid rgba(255,107,157,0.25);border-radius:12px;padding:10px 16px;color:rgba(255,200,210,0.6);font-size:12px;cursor:pointer;display:block;width:100%;transition:all 0.2s}
+  .restart-btn:hover{background:rgba(255,107,157,0.2);color:white}
+  .saving-msg{font-size:11px;color:rgba(255,200,210,0.4);text-align:center;margin-top:8px;min-height:16px}
   /* GAME */
-  .game-container { text-align:center; }
-  .game-container h2 {
-    font-size:16px; font-weight:700; margin-bottom:4px;
-    background:linear-gradient(135deg,#ff9a9e,#fbc2eb);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .game-status { font-size:12px; color:rgba(255,200,210,0.6); margin-bottom:10px; min-height:18px; }
-  .player-badge {
-    display:inline-block; padding:4px 14px; border-radius:20px; font-size:13px;
-    font-weight:700; margin-bottom:10px;
-  }
-  .player-badge.X { background:rgba(255,107,157,0.25); border:1px solid rgba(255,107,157,0.5); color:#ff6b9d; }
-  .player-badge.O { background:rgba(161,140,209,0.25); border:1px solid rgba(161,140,209,0.5); color:#a18cd1; }
-  .board { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-width:240px; margin:0 auto 12px; }
-  .cell {
-    aspect-ratio:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,107,157,0.2);
-    border-radius:12px; font-size:32px; cursor:pointer; transition:all 0.2s;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .cell:hover { background:rgba(255,107,157,0.12); border-color:#ff6b9d; }
-  .cell.taken { cursor:default; }
-  .cell.X { color:#ff6b9d; }
-  .cell.O { color:#a18cd1; }
-  .game-result {
-    font-size:15px; font-weight:700; margin-bottom:10px;
-    background:linear-gradient(135deg,#ff9a9e,#fbc2eb);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .new-game-btn {
-    padding:10px 24px; border:none; border-radius:12px;
-    background:linear-gradient(135deg,#ff6b9d,#ff8e53); color:white;
-    font-size:13px; font-weight:700; cursor:pointer; margin:4px;
-    box-shadow:0 3px 12px rgba(255,107,157,0.3);
-  }
-  .waiting-anim { font-size:22px; animation:spin 2s linear infinite; display:inline-block; }
-  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-  .share-link {
-    background:rgba(255,255,255,0.06); border:1px solid rgba(255,107,157,0.2);
-    border-radius:10px; padding:8px 12px; font-size:11px;
-    color:rgba(255,200,210,0.5); word-break:break-all; margin-bottom:8px;
-  }
-  .copy-btn {
-    padding:7px 16px; border:1px solid rgba(255,107,157,0.3); border-radius:10px;
-    background:rgba(255,107,157,0.1); color:#ffd6e0; font-size:12px;
-    cursor:pointer; margin-bottom:10px;
-  }
+  .game-container{text-align:center}
+  .game-container h2{font-size:16px;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,#ff9a9e,#fbc2eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .game-status{font-size:13px;color:rgba(255,200,210,0.8);margin-bottom:10px;min-height:20px;font-weight:600}
+  .player-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:10px}
+  .player-badge.X{background:rgba(255,107,157,0.25);border:1px solid rgba(255,107,157,0.5);color:#ff6b9d}
+  .player-badge.O{background:rgba(161,140,209,0.25);border:1px solid rgba(161,140,209,0.5);color:#a18cd1}
+  .board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:240px;margin:0 auto 12px}
+  .cell{aspect-ratio:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,107,157,0.2);border-radius:12px;font-size:32px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center}
+  .cell:hover{background:rgba(255,107,157,0.12);border-color:#ff6b9d}
+  .cell.taken{cursor:default}
+  .cell.X{color:#ff6b9d} .cell.O{color:#a18cd1}
+  .cell.win{background:rgba(255,107,157,0.25);border-color:#ff6b9d}
+  .game-result{font-size:15px;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#ff9a9e,#fbc2eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;min-height:22px}
+  .new-game-btn{padding:10px 24px;border:none;border-radius:12px;background:linear-gradient(135deg,#ff6b9d,#ff8e53);color:white;font-size:13px;font-weight:700;cursor:pointer;margin:4px;box-shadow:0 3px 12px rgba(255,107,157,0.3)}
+  .waiting-anim{font-size:18px;animation:spin 2s linear infinite;display:inline-block}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  .share-link{background:rgba(255,255,255,0.06);border:1px solid rgba(255,107,157,0.2);border-radius:10px;padding:8px 12px;font-size:11px;color:rgba(255,200,210,0.5);word-break:break-all;margin-bottom:8px}
+  .copy-btn{padding:7px 16px;border:1px solid rgba(255,107,157,0.3);border-radius:10px;background:rgba(255,107,157,0.1);color:#ffd6e0;font-size:12px;cursor:pointer;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -197,22 +103,10 @@
     <p class="tagline">Hum dil se kaam karte hain,<br>aur dil walon ke liye karte hain 💕</p>
     <p class="question">Aap hamare saath kis roop mein judna chahoge?</p>
     <div class="options">
-      <button class="option-btn" onclick="selectRole('Partner')">
-        <span class="icon">🤝</span>
-        <div><div class="title">Partner</div><div class="desc">Ek saath milke kuch bada banana hai</div></div>
-      </button>
-      <button class="option-btn" onclick="selectRole('Client')">
-        <span class="icon">💼</span>
-        <div><div class="title">Client</div><div class="desc">Humari services se fayda uthana chahte hain</div></div>
-      </button>
-      <button class="option-btn" onclick="selectRole('Collaborator')">
-        <span class="icon">🚀</span>
-        <div><div class="title">Collaborator</div><div class="desc">Saath milke kuch creative karna hai</div></div>
-      </button>
-      <button class="option-btn" onclick="selectRole('Friend')">
-        <span class="icon">😊</span>
-        <div><div class="title">Friend</div><div class="desc">Pehle thoda jaanna chahte hain 💕</div></div>
-      </button>
+      <button class="option-btn" onclick="selectRole('Partner')"><span class="icon">🤝</span><div><div class="title">Partner</div><div class="desc">Ek saath milke kuch bada banana hai</div></div></button>
+      <button class="option-btn" onclick="selectRole('Client')"><span class="icon">💼</span><div><div class="title">Client</div><div class="desc">Humari services se fayda uthana chahte hain</div></div></button>
+      <button class="option-btn" onclick="selectRole('Collaborator')"><span class="icon">🚀</span><div><div class="title">Collaborator</div><div class="desc">Saath milke kuch creative karna hai</div></div></button>
+      <button class="option-btn" onclick="selectRole('Friend')"><span class="icon">😊</span><div><div class="title">Friend</div><div class="desc">Pehle thoda jaanna chahte hain 💕</div></div></button>
     </div>
   </div>
 
@@ -224,14 +118,8 @@
     <div class="logo">🌸</div>
     <h1>Apne Baare Mein Batao</h1>
     <p class="tagline">Hum aapko jaanna chahte hain 💕</p>
-    <div class="form-group">
-      <label>💫 Aapka Naam</label>
-      <input type="text" id="userName" placeholder="Apna naam likho..." />
-    </div>
-    <div class="form-group">
-      <label>🎓 Aap kya karte ho?</label>
-      <input type="text" id="userQual" placeholder="Student, Engineer, Business..." />
-    </div>
+    <div class="form-group"><label>💫 Aapka Naam</label><input type="text" id="userName" placeholder="Apna naam likho..." /></div>
+    <div class="form-group"><label>🎓 Aap kya karte ho?</label><input type="text" id="userQual" placeholder="Student, Engineer, Business..." /></div>
     <div class="form-group">
       <label>✨ Hum se kya umeed rakhte ho?</label>
       <div class="exp-options">
@@ -255,25 +143,19 @@
     <p class="tagline">Bas ek kadam aur... hum intezaar mein hain 🌹</p>
     <div class="connect-options">
       <a class="connect-btn insta" href="https://instagram.com/YOUR_INSTA_ID" target="_blank" onclick="goFinal('Instagram')">
-        <span class="btn-icon">📸</span>
-        <div class="btn-title">Instagram</div>
-        <div class="btn-sub">@YOUR_INSTA_ID • DM karo 💜</div>
+        <span class="btn-icon">📸</span><div class="btn-title">Instagram</div><div class="btn-sub">@YOUR_INSTA_ID • DM karo 💜</div>
       </a>
       <a class="connect-btn whatsapp" href="https://api.whatsapp.com/send?phone=91XXXXXXXXXX&text=Say%20Hi%20to%20Pankaj%20%F0%9F%91%8B" target="_blank" onclick="goFinal('WhatsApp')">
-        <span class="btn-icon">💬</span>
-        <div class="btn-title">WhatsApp</div>
-        <div class="btn-sub">Message karo seedha 💚</div>
+        <span class="btn-icon">💬</span><div class="btn-title">WhatsApp</div><div class="btn-sub">Message karo seedha 💚</div>
       </a>
       <a class="connect-btn number" href="tel:+91XXXXXXXXXX" onclick="goFinal('Call')">
-        <span class="btn-icon">📞</span>
-        <div class="btn-title">Contact Number</div>
-        <div class="btn-sub">Call karo ya save karo 💙</div>
+        <span class="btn-icon">📞</span><div class="btn-title">Contact Number</div><div class="btn-sub">Call karo ya save karo 💙</div>
       </a>
     </div>
     <button class="back-btn" onclick="goStep(2)">← Wapas jao</button>
   </div>
 
-  <!-- STEP 4: Final -->
+  <!-- STEP 4 -->
   <div class="step" id="step4">
     <div class="step-indicator">
       <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
@@ -293,13 +175,13 @@
     <div class="game-container">
       <div class="logo">🎮</div>
       <h2>Tic Tac Toe 💕</h2>
-      <div class="game-status" id="gameStatus"></div>
-      <div id="waitingSection">
-        <p style="font-size:12px;color:rgba(255,200,210,0.5);margin-bottom:6px;">Pankaj ko link bhej diya gaya hai! 📧</p>
-        <div class="share-link" id="shareLink">Link generate ho rahi hai...</div>
+      <div class="game-status" id="gameStatus">Loading...</div>
+      <div id="waitingSection" style="display:none">
+        <p style="font-size:12px;color:rgba(255,200,210,0.5);margin-bottom:6px;">Game link share karo:</p>
+        <div class="share-link" id="shareLink"></div>
         <button class="copy-btn" onclick="copyLink()">📋 Link Copy Karo</button>
       </div>
-      <div id="playerBadgeDiv"></div>
+      <div id="playerBadgeDiv" style="margin-bottom:8px"></div>
       <div class="board" id="board"></div>
       <div class="game-result" id="gameResult"></div>
       <div id="gameButtons"></div>
@@ -308,29 +190,28 @@
   </div>
 
 </div>
-
 <script>
-  // Config
   const SUPABASE_URL = 'https://ubkbuijjqsxlsftwpomg.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVia2J1aWpqcXN4bHNmdHdwb21nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MjQ2MTgsImV4cCI6MjA5ODAwMDYxOH0.3qSkPfkaUII4OHcbF0V0yeP1ZbfJKss62jUINuUjIS8';
   const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzty7Kl2rm1OTspXbsKHAfv6X3lo6Jxcm8wI-4EWCRb9JWtK0xjY0zTsaz_a3Hoj87WjQ/exec';
   const EMAILJS_PUBLIC_KEY = 'hqctS4nYEdUCNzQhF';
   const EMAILJS_SERVICE_ID = 'service_z38o2dk';
   const EMAILJS_TEMPLATE_ID = 'template_ttbiedm';
+  const BASE_URL = 'https://pankajkumarrajput874508.github.io/my-page/';
 
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_KEY);
-  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
   var userData = { role:'', name:'', qualification:'', expectation:'', contact:'' };
   var gameId = null;
   var myRole = null;
-  var gameSubscription = null;
+  var pollInterval = null;
   var currentBoard = '---------';
   var currentTurn = 'X';
   var gameOver = false;
 
-  // Floating hearts
+  // Hearts
   var emojis = ['💕','💖','💗','💓','🌹','✨','💫','🌸'];
   var cont = document.getElementById('heartsContainer');
   for (var i = 0; i < 14; i++) {
@@ -349,26 +230,21 @@
     document.getElementById('step'+n).classList.add('active');
     document.getElementById('mainCard').scrollTop = 0;
   }
-
   function selectRole(role) { userData.role = role; goStep(2); }
-
   function selectExp(btn, val) {
     document.querySelectorAll('.exp-btn').forEach(function(b){ b.classList.remove('selected'); });
     btn.classList.add('selected');
     userData.expectation = val;
   }
-
   function goStep3() {
     var name = document.getElementById('userName').value.trim();
     var qual = document.getElementById('userQual').value.trim();
     if (!name) { alert('Apna naam toh batao! 💕'); return; }
     if (!qual) { alert('Profession bhi batao na! 😊'); return; }
     if (!userData.expectation) { alert('Ek option zaroor choose karo! ✨'); return; }
-    userData.name = name;
-    userData.qualification = qual;
+    userData.name = name; userData.qualification = qual;
     goStep(3);
   }
-
   function goFinal(contact) {
     userData.contact = contact;
     setTimeout(function() {
@@ -376,156 +252,126 @@
       document.getElementById('finalText').innerHTML =
         '<span class="heart-line">💕 💕 💕</span>' +
         'Pankaj bahut khush hoga yeh message dekhke! 😄<br><br>' +
-        '<b>Woh hamesha ready hai</b> — chahe business ho,<br>' +
-        'collaboration ho, ya bas ek achhi dosti! 🌟';
+        '<b>Woh hamesha ready hai</b> — chahe business ho,<br>collaboration ho, ya bas ek achhi dosti! 🌟';
       goStep(4);
       saveToSheet();
       sendEmailAlert('');
     }, 300);
   }
-
   function saveToSheet() {
-    fetch(SHEET_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(userData)
-    }).catch(function(){});
+    fetch(SHEET_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData) }).catch(function(){});
   }
-
   function sendEmailAlert(gameLink) {
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      from_name: userData.name,
-      role: userData.role,
-      qualification: userData.qualification,
-      expectation: userData.expectation,
-      contact: userData.contact,
+      from_name: userData.name || 'Unknown',
+      role: userData.role || '-',
+      qualification: userData.qualification || '-',
+      expectation: userData.expectation || '-',
+      contact: userData.contact || '-',
       game_link: gameLink || 'Game nahi khela'
     }).then(function() {
       var msg = document.getElementById('savingMsg');
-      if (msg) { msg.innerText = '✅ Data save ho gaya!'; setTimeout(function(){ msg.innerText=''; }, 3000); }
+      if (msg) { msg.innerText = '✅ Saved!'; setTimeout(function(){ msg.innerText=''; }, 2000); }
     }).catch(function(err) {
       console.log('Email error:', err);
     });
   }
-
   function restart() {
     userData = { role:'', name:'', qualification:'', expectation:'', contact:'' };
     document.getElementById('userName').value = '';
     document.getElementById('userQual').value = '';
     document.querySelectorAll('.exp-btn').forEach(function(b){ b.classList.remove('selected'); });
-    if (gameSubscription) { gameSubscription.unsubscribe(); gameSubscription = null; }
-    gameOver = false;
+    stopPolling(); gameOver = false;
     goStep(1);
   }
 
-  // ---- GAME ----
-  function makeGameId() {
-    return Math.random().toString(36).substring(2,8).toUpperCase();
-  }
+  // ===== GAME WITH POLLING =====
+  function makeGameId() { return Math.random().toString(36).substring(2,8).toUpperCase(); }
 
   async function startGame() {
     var params = new URLSearchParams(window.location.search);
     var existingGame = params.get('game');
     if (existingGame) {
-      gameId = existingGame;
-      myRole = 'O';
+      gameId = existingGame; myRole = 'O';
       await joinGame();
     } else {
-      gameId = makeGameId();
-      myRole = 'X';
+      gameId = makeGameId(); myRole = 'X';
       await createGame();
     }
   }
 
   async function createGame() {
-    try {
-      await db.from('games').insert({
-        id: gameId,
-        board: '---------',
-        current_turn: 'X',
-        winner: '',
-        player_x: userData.name || 'Player X',
-        player_o: ''
-      });
-
-      goStep(5);
-      renderBoard('---------', 'X');
-      updatePlayerBadge();
-
-      var link = window.location.href.split('?')[0] + '?game=' + gameId;
-      document.getElementById('shareLink').innerText = link;
-      document.getElementById('waitingSection').style.display = 'block';
-      document.getElementById('gameStatus').innerHTML = '<span class="waiting-anim">⏳</span> Pankaj ka intezaar hai...';
-
-      // Send email to Pankaj with game link
-      sendEmailAlert(link);
-
-      subscribeToGame();
-    } catch(e) {
-      alert('Game banana failed! Try again 😅');
-    }
+    await db.from('games').insert({
+      id: gameId, board: '---------', current_turn: 'X',
+      winner: '', player_x: userData.name || 'Player X', player_o: ''
+    });
+    var link = BASE_URL + '?game=' + gameId;
+    document.getElementById('shareLink').innerText = link;
+    document.getElementById('waitingSection').style.display = 'block';
+    goStep(5);
+    renderBoard('---------', 'X');
+    updateBadge();
+    sendEmailAlert(link);
+    startPolling();
   }
 
   async function joinGame() {
-    try {
-      var res = await db.from('games').select('*').eq('id', gameId).single();
-      if (!res.data) { alert('Game nahi mila! 😅'); return; }
-      await db.from('games').update({ player_o: userData.name || 'Pankaj' }).eq('id', gameId);
-      goStep(5);
-      document.getElementById('waitingSection').style.display = 'none';
-      updatePlayerBadge();
-      renderBoard(res.data.board, res.data.current_turn);
-      subscribeToGame();
-    } catch(e) {
-      alert('Game join karna failed! 😅');
-    }
+    var res = await db.from('games').select('*').eq('id', gameId).single();
+    if (!res.data) { alert('Game nahi mila!'); return; }
+    await db.from('games').update({ player_o: userData.name || 'Pankaj' }).eq('id', gameId);
+    document.getElementById('waitingSection').style.display = 'none';
+    goStep(5);
+    updateBadge();
+    renderBoard(res.data.board, res.data.current_turn);
+    startPolling();
   }
 
-  function subscribeToGame() {
-    if (gameSubscription) gameSubscription.unsubscribe();
-    gameSubscription = db
-      .channel('game-' + gameId)
-      .on('postgres_changes', {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'games',
-        filter: 'id=eq.' + gameId
-      }, function(payload) {
-        var g = payload.new;
-        currentBoard = g.board;
-        currentTurn = g.current_turn;
+  function startPolling() {
+    stopPolling();
+    pollInterval = setInterval(async function() {
+      try {
+        var res = await db.from('games').select('*').eq('id', gameId).single();
+        if (!res.data) return;
+        var g = res.data;
+        // Hide waiting when player O joined
         if (g.player_o && g.player_o !== '') {
           document.getElementById('waitingSection').style.display = 'none';
         }
-        renderBoard(g.board, g.current_turn);
-        if (g.winner) {
-          gameOver = true;
-          if (g.winner === 'draw') {
-            document.getElementById('gameResult').innerText = "🤝 Draw! Dobara khelo!";
-          } else if (g.winner === myRole) {
-            document.getElementById('gameResult').innerText = "🎉 Tum Jeet Gaye! 🥳";
-          } else {
-            document.getElementById('gameResult').innerText = "💔 Haare! Dobara try karo!";
+        // Only re-render if board changed
+        if (g.board !== currentBoard || g.winner !== '') {
+          currentBoard = g.board;
+          currentTurn = g.current_turn;
+          renderBoard(g.board, g.current_turn);
+          if (g.winner) {
+            gameOver = true;
+            stopPolling();
+            if (g.winner === 'draw') {
+              document.getElementById('gameResult').innerText = '🤝 Draw! Dobara khelo!';
+            } else if (g.winner === myRole) {
+              document.getElementById('gameResult').innerText = '🎉 Tum Jeet Gaye! 🥳';
+            } else {
+              document.getElementById('gameResult').innerText = '💔 Haare! Dobara try karo!';
+            }
+            document.getElementById('gameStatus').innerText = '';
+            document.getElementById('gameButtons').innerHTML = '<button class="new-game-btn" onclick="playAgain()">🔄 Dobara Khelo</button>';
           }
-          document.getElementById('gameButtons').innerHTML =
-            '<button class="new-game-btn" onclick="playAgain()">🔄 Dobara Khelo</button>';
-          document.getElementById('gameStatus').innerText = '';
-        } else {
-          document.getElementById('gameResult').innerText = '';
-          document.getElementById('gameButtons').innerHTML = '';
-          updateStatus(g.current_turn);
         }
-      })
-      .subscribe();
+        updateStatus(g.current_turn, g.winner);
+      } catch(e) {}
+    }, 1500);
   }
 
-  function updatePlayerBadge() {
+  function stopPolling() {
+    if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+  }
+
+  function updateBadge() {
     document.getElementById('playerBadgeDiv').innerHTML =
-      'Tum ho: <span class="player-badge ' + myRole + '">' +
-      (myRole === 'X' ? '❌ X' : '⭕ O') + '</span>';
+      'Tum ho: <span class="player-badge ' + myRole + '">' + (myRole==='X' ? '❌ X' : '⭕ O') + '</span>';
   }
 
-  function updateStatus(turn) {
+  function updateStatus(turn, winner) {
+    if (winner) return;
     if (turn === myRole) {
       document.getElementById('gameStatus').innerText = '✨ Tumhari baari hai!';
     } else {
@@ -534,43 +380,47 @@
   }
 
   function renderBoard(board, turn) {
-    currentBoard = board;
-    currentTurn = turn;
+    currentBoard = board; currentTurn = turn;
     var boardEl = document.getElementById('board');
     boardEl.innerHTML = '';
     for (var i = 0; i < 9; i++) {
       var cell = document.createElement('div');
       cell.className = 'cell';
       var val = board[i];
-      if (val === 'X') { cell.innerText = '❌'; cell.classList.add('X','taken'); }
-      else if (val === 'O') { cell.innerText = '⭕'; cell.classList.add('O','taken'); }
+      if (val === 'X') { cell.innerHTML = '❌'; cell.classList.add('X','taken'); }
+      else if (val === 'O') { cell.innerHTML = '⭕'; cell.classList.add('O','taken'); }
       else { cell.dataset.index = i; cell.onclick = makeMove; }
       boardEl.appendChild(cell);
     }
-    if (!gameOver) updateStatus(turn);
+    if (!gameOver) updateStatus(turn, '');
   }
 
   async function makeMove(e) {
     var idx = parseInt(e.target.dataset.index);
     if (currentTurn !== myRole || currentBoard[idx] !== '-' || gameOver) return;
+    // Optimistic UI update
     var newBoard = currentBoard.split('');
     newBoard[idx] = myRole;
     var boardStr = newBoard.join('');
     var winner = checkWinner(boardStr);
     var nextTurn = myRole === 'X' ? 'O' : 'X';
+    currentBoard = boardStr;
+    renderBoard(boardStr, winner ? myRole : nextTurn);
     await db.from('games').update({
       board: boardStr,
       current_turn: winner ? myRole : nextTurn,
-      winner: winner || ''
+      winner: winner || '',
+      updated_at: new Date().toISOString()
     }).eq('id', gameId);
   }
 
   function checkWinner(b) {
     var lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    for (var l of lines) {
+    for (var i = 0; i < lines.length; i++) {
+      var l = lines[i];
       if (b[l[0]] !== '-' && b[l[0]] === b[l[1]] && b[l[1]] === b[l[2]]) return b[l[0]];
     }
-    if (!b.includes('-')) return 'draw';
+    if (b.indexOf('-') === -1) return 'draw';
     return null;
   }
 
@@ -578,15 +428,13 @@
     gameOver = false;
     document.getElementById('gameResult').innerText = '';
     document.getElementById('gameButtons').innerHTML = '';
-    await db.from('games').update({ board:'---------', current_turn:'X', winner:'' }).eq('id', gameId);
+    currentBoard = '---------';
+    await db.from('games').update({ board:'---------', current_turn:'X', winner:'', updated_at: new Date().toISOString() }).eq('id', gameId);
     renderBoard('---------', 'X');
+    startPolling();
   }
 
-  function leaveGame() {
-    if (gameSubscription) { gameSubscription.unsubscribe(); gameSubscription = null; }
-    gameOver = false;
-    goStep(4);
-  }
+  function leaveGame() { stopPolling(); gameOver = false; goStep(4); }
 
   function copyLink() {
     var link = document.getElementById('shareLink').innerText;
@@ -597,30 +445,27 @@
     });
   }
 
-  // On load — check if joining game via URL
-  window.onload = function() {
+  // On load
+  window.onload = async function() {
     var params = new URLSearchParams(window.location.search);
-    if (params.get('game')) {
-      gameId = params.get('game');
-      myRole = 'O';
+    var gid = params.get('game');
+    if (gid) {
+      gameId = gid; myRole = 'O';
       userData.name = 'Pankaj';
-      goStep(5);
       document.getElementById('waitingSection').style.display = 'none';
-      updatePlayerBadge();
-      document.getElementById('gameStatus').innerHTML = '<span class="waiting-anim">⏳</span> Game load ho raha hai...';
-      joinGameDirect();
+      goStep(5);
+      updateBadge();
+      document.getElementById('gameStatus').innerText = '⏳ Game load ho raha hai...';
+      try {
+        var res = await db.from('games').select('*').eq('id', gameId).single();
+        if (res.data) {
+          await db.from('games').update({ player_o:'Pankaj', updated_at: new Date().toISOString() }).eq('id', gameId);
+          renderBoard(res.data.board, res.data.current_turn);
+          startPolling();
+        }
+      } catch(e) { alert('Game nahi mila!'); }
     }
   };
-
-  async function joinGameDirect() {
-    try {
-      var res = await db.from('games').select('*').eq('id', gameId).single();
-      if (!res.data) { alert('Game nahi mila!'); return; }
-      await db.from('games').update({ player_o: 'Pankaj' }).eq('id', gameId);
-      renderBoard(res.data.board, res.data.current_turn);
-      subscribeToGame();
-    } catch(e) {}
-  }
 </script>
 </body>
 </html>
