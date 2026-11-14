@@ -9,96 +9,50 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Figtree:wght@400;500;600&family=Gloock&display=swap">
 <style>
-  /* Layout: one question per card, centered narrow column, hearts drifting behind. Palette: rose ink on blush paper, wine night in dark. */
   :root {
-    --bg: #fbeef0;
-    --surface: #fff8f8;
-    --fg: #3a1626;
-    --muted: #8a5a6a;
-    --accent: #c2255c;
-    --accent-ink: #ffffff;
-    --soft: #f7dde4;
-    --line: #efc9d3;
-    --heart: #e58aa5;
+    --bg: #fbeef0; --surface: #fff8f8; --fg: #3a1626; --muted: #8a5a6a;
+    --accent: #c2255c; --accent-ink: #ffffff; --soft: #f7dde4; --line: #efc9d3; --heart: #e58aa5;
     --display: 'Gloock', Georgia, 'Times New Roman', serif;
     --body: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --hand: 'Caveat', 'Segoe Script', cursive;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #1d0c16;
-      --surface: #2a1220;
-      --fg: #fbe9ee;
-      --muted: #c89aab;
-      --accent: #ff6b95;
-      --accent-ink: #2a0a16;
-      --soft: #3a1a2c;
-      --line: #4a2438;
-      --heart: #8f3558;
+      --bg: #1d0c16; --surface: #2a1220; --fg: #fbe9ee; --muted: #c89aab;
+      --accent: #ff6b95; --accent-ink: #2a0a16; --soft: #3a1a2c; --line: #4a2438; --heart: #8f3558;
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #1d0c16;
-    --surface: #2a1220;
-    --fg: #fbe9ee;
-    --muted: #c89aab;
-    --accent: #ff6b95;
-    --accent-ink: #2a0a16;
-    --soft: #3a1a2c;
-    --line: #4a2438;
-    --heart: #8f3558;
+    --bg: #1d0c16; --surface: #2a1220; --fg: #fbe9ee; --muted: #c89aab;
+    --accent: #ff6b95; --accent-ink: #2a0a16; --soft: #3a1a2c; --line: #4a2438; --heart: #8f3558;
     color-scheme: dark;
   }
-
   * { box-sizing: border-box; }
   body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--body);
-    font-size: 16px;
-    line-height: 1.5;
-    min-height: 100vh;
-    padding-block: 28px 40px;
+    background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5;
+    min-height: 100vh; padding-block: 28px 40px;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
-
   .hearts { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-  .hearts span {
-    position: absolute; bottom: -12%; color: var(--heart); opacity: .35;
-    animation: rise linear infinite;
-  }
-  @keyframes rise {
-    from { transform: translateY(0) rotate(-8deg); }
-    to { transform: translateY(-120vh) rotate(10deg); }
-  }
-
+  .hearts span { position: absolute; bottom: -12%; color: var(--heart); opacity: .35; animation: rise linear infinite; }
+  @keyframes rise { from { transform: translateY(0) rotate(-8deg); } to { transform: translateY(-120vh) rotate(10deg); } }
   .stage { position: relative; z-index: 1; max-width: 30rem; margin: 0 auto; }
   .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
   .brand { font-family: var(--hand); font-size: 1.6rem; line-height: 1; color: var(--accent); }
   .count { font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .bar { height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; margin-bottom: 18px; }
   .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 4px; transition: width .35s ease; }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 26px 20px 22px;
-    min-width: 0;
-  }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px 20px 22px; min-width: 0; }
   .card .in { animation: lift .35s ease both; }
   @keyframes lift { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
   h1, h2 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; }
   .q { font-size: 1.65rem; line-height: 1.2; margin-bottom: 8px; }
   .hint { font-family: var(--hand); font-size: 1.25rem; color: var(--muted); margin: 0 0 18px; line-height: 1.2; }
-
   .opts { display: grid; gap: 10px; margin-top: 18px; }
   .opt {
-    display: flex; align-items: center; gap: 12px;
-    border: 1.5px solid var(--line); background: var(--surface); color: var(--fg);
+    display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg);
     border-radius: 14px; padding: 14px 16px; cursor: pointer; min-width: 0;
     transition: border-color .15s, background .15s, transform .1s;
   }
@@ -114,11 +68,9 @@
   .opt.on::before { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px var(--soft); }
   .opt:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
   .opt span { min-width: 0; overflow-wrap: anywhere; }
-
   .field, select {
     width: 100%; font: inherit; color: var(--fg); background: var(--surface);
-    border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 14px;
-    margin-top: 14px;
+    border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 14px; margin-top: 14px;
   }
   select { margin-top: 18px; appearance: auto; }
   textarea.field { min-height: 130px; resize: vertical; }
@@ -127,22 +79,22 @@
   .sub { margin-top: 16px; }
   .sub[hidden] { display: none !important; }
   .label { display: block; font-size: .85rem; color: var(--muted); margin-top: 16px; }
-
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .chip {
-    font: inherit; color: var(--fg); background: var(--surface); cursor: pointer;
-    border: 1.5px solid var(--line); border-radius: 999px; padding: 9px 15px;
+  .note-box {
+    margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: .92rem; line-height: 1.5;
+    border: 1.5px solid var(--line); background: var(--soft); color: var(--fg);
   }
+  .note-box b { color: var(--accent); }
+  .note-box.warn { border-color: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip { font: inherit; color: var(--fg); background: var(--surface); cursor: pointer; border: 1.5px solid var(--line); border-radius: 999px; padding: 9px 15px; }
   .chip:hover { border-color: var(--accent); }
   .chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
   .chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-
   .zone { position: relative; height: 240px; margin-top: 20px; }
   .zone .btn { position: absolute; top: 0; }
   .zone .yes { left: 0; width: calc(50% - 6px); }
   .zone .no { left: calc(50% + 6px); width: calc(50% - 6px); transition: left .2s ease, top .2s ease; }
   .zone-note { font-family: var(--hand); font-size: 1.3rem; color: var(--accent); min-height: 1.6rem; margin: 6px 0 0; }
-
   .btn {
     font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center;
     display: inline-block; border-radius: 14px; padding: 13px 20px;
@@ -153,19 +105,11 @@
   .btn.ghost { background: transparent; color: var(--accent); }
   .btn.on { box-shadow: 0 0 0 3px var(--soft), 0 0 0 5px var(--accent); }
   .btn[disabled] { opacity: .4; cursor: not-allowed; filter: none; }
-
   .nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
   .nav .btn { flex: 1; }
   .nav .back[hidden] { display: none !important; }
-
   .done-lead { font-size: 1rem; color: var(--muted); margin: 8px 0 18px; }
-  .review { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-  .review li { border-top: 1px solid var(--line); padding-top: 10px; min-width: 0; }
-  .review b { display: block; font-size: .8rem; font-weight: 500; color: var(--muted); letter-spacing: .02em; }
-  .review span { overflow-wrap: anywhere; }
-  .actions { display: grid; gap: 10px; margin-top: 22px; }
   .status { font-family: var(--hand); font-size: 1.3rem; color: var(--accent); margin: 8px 0 0; min-height: 1.5rem; }
-
   .love { text-align: center; padding-block: 6px; }
   .love-heart { font-size: 3.4rem; line-height: 1; color: var(--accent); animation: beat 1.4s ease-in-out infinite; }
   @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
@@ -174,18 +118,13 @@
   .love .sign { font-family: var(--hand); font-size: 2rem; color: var(--accent); margin-top: 14px; animation: lift .8s ease both; }
   .burst { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; }
   .burst span { position: absolute; bottom: -10%; color: var(--accent); animation: burst-up ease-out both; }
-  @keyframes burst-up {
-    from { transform: translateY(0) rotate(-10deg); opacity: 1; }
-    to { transform: translateY(-115vh) rotate(14deg); opacity: 0; }
-  }
-
+  @keyframes burst-up { from { transform: translateY(0) rotate(-10deg); opacity: 1; } to { transform: translateY(-115vh) rotate(14deg); opacity: 0; } }
   @media (prefers-reduced-motion: reduce) {
     .hearts, .burst { display: none; }
     .card .in, .bar i, .zone .no { animation: none; transition: none; }
     .love-heart, .love p, .love .sign { animation: none; }
   }
 </style>
-
 </head>
 <body>
 <div class="hearts" id="hearts" aria-hidden="true"></div>
@@ -208,7 +147,6 @@
   var SONGS = ['Majaal', 'Sun Ranjheya', 'Kinna Sona', 'Maine Khud Ko'];
   var WHY = ['Dar gharwalo ka', 'Mujhe aap mein interest nahi hai', 'Kisi se baat karti hu'];
 
-  // Aakhri screen ka romantic message. Yahan apni marzi se kuch bhi badal sakte ho.
   var LOVE_NOTE = [
     'Jo bhi jawab ho, ek baat kabhi nahi badlegi.',
     'Tum mere liye bahut khaas ho.',
@@ -341,6 +279,7 @@
         }
         sel.addEventListener('change', function () {
           state.a.letter = sel.value;
+          if (sel.value === 'N') { wrong = 0; saveWrong(); }
           if (sel.value && sel.value !== 'N') {
             wrong++;
             saveWrong();
@@ -510,6 +449,11 @@
       short: 'Is tarah baat karein',
       render: function (box) {
         box.append(head('Kya hum is tarah baat kar sakte hain?'));
+        box.append(el('div', { 'class': 'note-box' },
+          el('b', {}, 'Ye tarika kaafi safe hai. '),
+          '3 bar lagatar galat letter chunne par page hamesha ke liye lock ho jayega aur phir kabhi aage nahi badh payega., ' +
+          'kisi aur ko nahi dikhega. Jab chaho bina kisi dar ke “Nahi” chun sakti ho,'
+        ));
         box.append(radios('freq', ['Har din', '4 din mein ek baar', 'Har week', 'Nahi']));
       },
       valid: function () { return !!state.a.freq; },
@@ -549,8 +493,8 @@
       navEl.hidden = true;
       countEl.textContent = 'Lock';
       barEl.style.width = '0';
-      box.append(el('h2', { 'class': 'q' }, 'Ye page ab lock ho gaya.'));
-      box.append(el('p', { 'class': 'done-lead' }, 'Teen baar galat letter chuna gaya, isliye ab aage nahi badh sakte.'));
+      box.append(el('h2', { 'class': 'q' }, 'Ye page ab hamesha ke liye lock ho gaya.'));
+      box.append(el('p', { 'class': 'done-lead' }, 'Teen baar galat letter chuna gaya, isliye ab aage kabhi nahi badh sakte.'));
       return;
     }
     if (state.i >= steps.length) { showDone(box); return; }
@@ -568,7 +512,6 @@
     navEl.hidden = true;
     countEl.textContent = 'Ho gaya';
     barEl.style.width = '100%';
-    var text = buildSummary();
     var love = el('div', { 'class': 'love' });
     love.append(el('div', { 'class': 'love-heart', 'aria-hidden': 'true' }, '♥'));
     love.append(el('h2', { 'class': 'q' }, 'Tumhare jawab mil gaye.'));
@@ -582,30 +525,6 @@
     love.append(sg);
     box.append(love);
     burstHearts();
-    var status = el('p', { 'class': 'status' });
-    var wa = el('a', {
-      'class': 'btn', target: '_blank', rel: 'noopener noreferrer',
-      href: 'https://wa.me/?text=' + encodeURIComponent(text)
-    }, 'WhatsApp pe bhejo');
-    var copy = el('button', { 'class': 'btn ghost', type: 'button' }, 'Jawab copy karo');
-    var fallback = el('textarea', { 'class': 'field', readonly: 'readonly', id: 'fallback' });
-    fallback.value = text;
-    fallback.hidden = true;
-    copy.addEventListener('click', function () {
-      function manual() {
-        fallback.hidden = false;
-        fallback.focus();
-        fallback.select();
-        status.textContent = 'Text select kar diya, ab copy kar lo.';
-      }
-      try {
-        navigator.clipboard.writeText(text).then(function () {
-          status.textContent = 'Copy ho gaya.';
-        }, manual);
-      } catch (e) { manual(); }
-    });
-    var again = el('button', { 'class': 'btn ghost', type: 'button' }, 'Phir se bharo');
-    again.addEventListener('click', function () { state = { i: 0, a: {} }; show(); });
     window.scrollTo(0, 0);
   }
 
@@ -630,18 +549,8 @@
     hearts.append(s);
   }
 
-  function checkReset() {
-    if (location.hash !== '#reset-n7k2') return false;
-    wrong = 0;
-    try { localStorage.removeItem('dkb-wrong'); } catch (e) {}
-    state = { i: 0, a: {} };
-    return true;
-  }
-  window.addEventListener('hashchange', function () { if (checkReset()) show(); });
-  checkReset();
   show();
 })();
 </script>
-
 </body>
 </html>
