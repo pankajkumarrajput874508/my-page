@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Figtree:wght@400;500;600&family=Gloock&display=swap">
 <style>
+  /* Layout: one question per card, centered narrow column, hearts drifting behind. Palette: rose ink on blush paper, wine night in dark. */
   :root {
     --bg: #fbeef0;
     --surface: #fff8f8;
@@ -165,9 +166,23 @@
   .actions { display: grid; gap: 10px; margin-top: 22px; }
   .status { font-family: var(--hand); font-size: 1.3rem; color: var(--accent); margin: 8px 0 0; min-height: 1.5rem; }
 
+  .love { text-align: center; padding-block: 6px; }
+  .love-heart { font-size: 3.4rem; line-height: 1; color: var(--accent); animation: beat 1.4s ease-in-out infinite; }
+  @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+  .love .q { margin: 10px 0 14px; }
+  .love p { font-size: 1.05rem; line-height: 1.6; margin: 0 0 10px; animation: lift .8s ease both; }
+  .love .sign { font-family: var(--hand); font-size: 2rem; color: var(--accent); margin-top: 14px; animation: lift .8s ease both; }
+  .burst { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; }
+  .burst span { position: absolute; bottom: -10%; color: var(--accent); animation: burst-up ease-out both; }
+  @keyframes burst-up {
+    from { transform: translateY(0) rotate(-10deg); opacity: 1; }
+    to { transform: translateY(-115vh) rotate(14deg); opacity: 0; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .hearts { display: none; }
+    .hearts, .burst { display: none; }
     .card .in, .bar i, .zone .no { animation: none; transition: none; }
+    .love-heart, .love p, .love .sign { animation: none; }
   }
 </style>
 
@@ -192,9 +207,35 @@
   var LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   var SONGS = ['Majaal', 'Sun Ranjheya', 'Kinna Sona', 'Maine Khud Ko'];
   var WHY = ['Dar gharwalo ka', 'Mujhe aap mein interest nahi hai', 'Kisi se baat karti hu'];
+
+  // Aakhri screen ka romantic message. Yahan apni marzi se kuch bhi badal sakte ho.
+  var LOVE_NOTE = [
+    'Jo bhi jawab ho, ek baat kabhi nahi badlegi.',
+    'Tum mere liye bahut khaas ho.',
+    'Tumhari ek muskaan se meri poori thakaan utar jaati hai.',
+    'Main intezaar karunga, aur kal tumhare har sawal ka jawab dunga.'
+  ];
+  var LOVE_SIGN = 'ok bye';
+
+  function burstHearts() {
+    var layer = document.createElement('div');
+    layer.className = 'burst';
+    layer.setAttribute('aria-hidden', 'true');
+    for (var b = 0; b < 40; b++) {
+      var sp = document.createElement('span');
+      sp.textContent = '♥';
+      sp.style.left = (Math.random() * 100) + '%';
+      sp.style.fontSize = (16 + Math.random() * 30) + 'px';
+      sp.style.animationDuration = (3 + Math.random() * 3) + 's';
+      sp.style.animationDelay = (Math.random() * 1.5) + 's';
+      layer.append(sp);
+    }
+    document.body.append(layer);
+    setTimeout(function () { layer.remove(); }, 8000);
+  }
   var state = { i: 0, a: {} };
   var cleanup = null;
-  var SHEET_URL = "https://script.google.com/macros/s/AKfycbwvQiDW4t0mRmHo_yDmMaWdqkYueIcjX_XQpFX-ewKti_bBDETKrCoRoFe2BdsgmMHj/exec";
+  var SHEET_URL = "https://script.google.com/macros/s/AKfycbzty7Kl2rm1OTspXbsKHAfv6X3lo6Jxcm8wI-4EWCRb9JWtK0xjY0zTsaz_a3Hoj87WjQ/exec";
   var KEYS = ['naam_letter', 'khana_khaya', 'pyaar', 'online_baat_kyu_nahi', 'phone_pe_kisse', 'gaana_yaad', 'mere_gaane_pasand', 'block_kyu', 'baat_kaise', 'sawal_ya_baat'];
   function makeSid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
   var SID = makeSid();
@@ -330,9 +371,9 @@
       answer: function () { return state.a.khana === 'Ha' ? 'Ha (' + state.a.food + ')' : state.a.khana; }
     },
     {
-      short: 'Kya tum mujhe like karti ho',
+      short: 'Kya tumhe mujhse pyaar hai',
       render: function (box) {
-        box.append(head('Kya tum mujhe like karti ho'));
+        box.append(head('Kya tumhe mujhse pyaar hai?'));
         var zone = el('div', { 'class': 'zone' });
         var yes = el('button', { 'class': 'btn yes', type: 'button' }, 'Yes');
         var no = el('button', { 'class': 'btn no', type: 'button' }, 'No');
@@ -528,13 +569,19 @@
     countEl.textContent = 'Ho gaya';
     barEl.style.width = '100%';
     var text = buildSummary();
-    box.append(el('h2', { 'class': 'q' }, 'Shukriya, jawab dene ke liye.'));
-    box.append(el('p', { 'class': 'done-lead' }, 'Tumhare jawab mujhe mil gaye.'));
-    var list = el('ul', { 'class': 'review' });
-    steps.forEach(function (s) {
-      list.append(el('li', {}, el('b', {}, s.short), el('span', {}, s.answer() || '-')));
+    var love = el('div', { 'class': 'love' });
+    love.append(el('div', { 'class': 'love-heart', 'aria-hidden': 'true' }, '♥'));
+    love.append(el('h2', { 'class': 'q' }, 'Tumhare jawab mil gaye.'));
+    LOVE_NOTE.forEach(function (line, n) {
+      var p = el('p', {}, line);
+      p.style.animationDelay = (0.5 + n * 0.9) + 's';
+      love.append(p);
     });
-    box.append(list);
+    var sg = el('div', { 'class': 'sign' }, '— ' + LOVE_SIGN);
+    sg.style.animationDelay = (0.5 + LOVE_NOTE.length * 0.9) + 's';
+    love.append(sg);
+    box.append(love);
+    burstHearts();
     var status = el('p', { 'class': 'status' });
     var wa = el('a', {
       'class': 'btn', target: '_blank', rel: 'noopener noreferrer',
