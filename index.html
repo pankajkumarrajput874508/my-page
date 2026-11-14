@@ -1,409 +1,600 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Something Special ✨</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}</style>
+<title>Dil Ki Baat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Figtree:wght@400;500;600&family=Gloock&display=swap">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #fbeef0;
+    --surface: #fff8f8;
+    --fg: #3a1626;
+    --muted: #8a5a6a;
+    --accent: #c2255c;
+    --accent-ink: #ffffff;
+    --soft: #f7dde4;
+    --line: #efc9d3;
+    --heart: #e58aa5;
+    --display: 'Gloock', Georgia, 'Times New Roman', serif;
+    --body: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --hand: 'Caveat', 'Segoe Script', cursive;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1d0c16;
+      --surface: #2a1220;
+      --fg: #fbe9ee;
+      --muted: #c89aab;
+      --accent: #ff6b95;
+      --accent-ink: #2a0a16;
+      --soft: #3a1a2c;
+      --line: #4a2438;
+      --heart: #8f3558;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1d0c16;
+    --surface: #2a1220;
+    --fg: #fbe9ee;
+    --muted: #c89aab;
+    --accent: #ff6b95;
+    --accent-ink: #2a0a16;
+    --soft: #3a1a2c;
+    --line: #4a2438;
+    --heart: #8f3558;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
   body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #1a0533, #2d1b4e, #1a0533);
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
     min-height: 100vh;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    overflow: hidden;
-    position: relative;
+    padding-block: 28px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
-  .hearts-bg {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
+
+  .hearts { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .hearts span {
+    position: absolute; bottom: -12%; color: var(--heart); opacity: .35;
+    animation: rise linear infinite;
   }
-  .heart-float {
-    position: absolute;
-    bottom: -50px;
-    animation: floatUp linear infinite;
-    opacity: 0.15;
+  @keyframes rise {
+    from { transform: translateY(0) rotate(-8deg); }
+    to { transform: translateY(-120vh) rotate(10deg); }
   }
-  @keyframes floatUp {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
-    100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
-  }
+
+  .stage { position: relative; z-index: 1; max-width: 30rem; margin: 0 auto; }
+  .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .brand { font-family: var(--hand); font-size: 1.6rem; line-height: 1; color: var(--accent); }
+  .count { font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bar { height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; margin-bottom: 18px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 4px; transition: width .35s ease; }
+
   .card {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,182,193,0.2);
-    border-radius: 24px;
-    padding: 20px 22px;
-    max-width: 400px;
-    width: 100%;
-    color: white;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 0 60px rgba(255,100,150,0.1);
-    max-height: 96vh;
-    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 26px 20px 22px;
+    min-width: 0;
   }
-  /* Hide scrollbar but allow scroll */
-  .card::-webkit-scrollbar { display: none; }
-  .card { -ms-overflow-style: none; scrollbar-width: none; }
+  .card .in { animation: lift .35s ease both; }
+  @keyframes lift { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-  .step { display: none; animation: fadeIn 0.4s ease; }
-  .step.active { display: block; }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .step-indicator {
-    display: flex; justify-content: center; gap: 8px; margin-bottom: 14px;
-  }
-  .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: rgba(255,255,255,0.15); transition: all 0.3s;
-  }
-  .dot.active { background: #ff6b9d; transform: scale(1.4); }
-  .dot.done { background: rgba(255,107,157,0.4); }
+  h1, h2 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; }
+  .q { font-size: 1.65rem; line-height: 1.2; margin-bottom: 8px; }
+  .hint { font-family: var(--hand); font-size: 1.25rem; color: var(--muted); margin: 0 0 18px; line-height: 1.2; }
 
-  .logo { font-size: 32px; margin-bottom: 6px; text-align: center; }
-  h1 {
-    font-size: 18px; font-weight: 700; text-align: center;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: 4px; line-height: 1.3;
+  .opts { display: grid; gap: 10px; margin-top: 18px; }
+  .opt {
+    display: flex; align-items: center; gap: 12px;
+    border: 1.5px solid var(--line); background: var(--surface); color: var(--fg);
+    border-radius: 14px; padding: 14px 16px; cursor: pointer; min-width: 0;
+    transition: border-color .15s, background .15s, transform .1s;
   }
-  .tagline {
-    font-size: 11px; color: rgba(255,200,210,0.5);
-    margin-bottom: 14px; line-height: 1.5; text-align: center;
+  .opt:hover { border-color: var(--accent); }
+  .opt:active { transform: scale(.99); }
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .opt::before {
+    content: ""; flex: none; width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--line); background: var(--surface);
+    transition: border-color .15s, background .15s, box-shadow .15s;
   }
-  .question {
-    font-size: 13px; color: rgba(255,220,225,0.9);
-    font-weight: 600; margin-bottom: 12px; line-height: 1.5; text-align: center;
-  }
+  .opt.on { border-color: var(--accent); background: var(--soft); }
+  .opt.on::before { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px var(--soft); }
+  .opt:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .opt span { min-width: 0; overflow-wrap: anywhere; }
 
-  /* Option buttons */
-  .options { display: flex; flex-direction: column; gap: 8px; }
-  .option-btn {
-    background: rgba(255,107,157,0.08);
-    border: 1px solid rgba(255,107,157,0.2);
-    border-radius: 14px; padding: 11px 14px;
-    color: white; font-size: 13px; cursor: pointer;
-    transition: all 0.25s; text-align: left;
-    display: flex; align-items: center; gap: 10px; width: 100%;
+  .field, select {
+    width: 100%; font: inherit; color: var(--fg); background: var(--surface);
+    border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 14px;
+    margin-top: 14px;
   }
-  .option-btn:hover {
-    background: rgba(255,107,157,0.2);
-    border-color: #ff6b9d; transform: translateY(-1px);
-  }
-  .option-btn .icon { font-size: 20px; }
-  .option-btn .title { font-weight: 600; font-size: 13px; color: #ffd6e0; }
-  .option-btn .desc { font-size: 11px; color: rgba(255,200,210,0.45); margin-top: 1px; }
+  select { margin-top: 18px; appearance: auto; }
+  textarea.field { min-height: 130px; resize: vertical; }
+  .field::placeholder { color: var(--muted); opacity: .8; }
+  .field:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .sub { margin-top: 16px; }
+  .sub[hidden] { display: none !important; }
+  .label { display: block; font-size: .85rem; color: var(--muted); margin-top: 16px; }
 
-  /* Form */
-  .form-group { margin-bottom: 12px; }
-  .form-group label {
-    display: block; font-size: 12px;
-    color: rgba(255,200,210,0.65); margin-bottom: 6px;
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip {
+    font: inherit; color: var(--fg); background: var(--surface); cursor: pointer;
+    border: 1.5px solid var(--line); border-radius: 999px; padding: 9px 15px;
   }
-  .form-group input {
-    width: 100%; background: rgba(255,107,157,0.08);
-    border: 1px solid rgba(255,107,157,0.2);
-    border-radius: 12px; padding: 10px 14px;
-    color: white; font-size: 13px; outline: none;
-    transition: border 0.2s; font-family: inherit;
-  }
-  .form-group input::placeholder { color: rgba(255,200,210,0.25); }
-  .form-group input:focus { border-color: #ff6b9d; }
+  .chip:hover { border-color: var(--accent); }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-  .exp-options { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
-  .exp-btn {
-    background: rgba(255,107,157,0.06);
-    border: 1px solid rgba(255,107,157,0.15);
-    border-radius: 10px; padding: 9px 12px;
-    color: rgba(255,220,225,0.7); font-size: 12px;
-    cursor: pointer; transition: all 0.2s; text-align: left; width: 100%;
-  }
-  .exp-btn:hover, .exp-btn.selected {
-    background: rgba(255,107,157,0.2);
-    border-color: #ff6b9d; color: white;
-  }
+  .zone { position: relative; height: 240px; margin-top: 20px; }
+  .zone .btn { position: absolute; top: 0; }
+  .zone .yes { left: 0; width: calc(50% - 6px); }
+  .zone .no { left: calc(50% + 6px); width: calc(50% - 6px); transition: left .2s ease, top .2s ease; }
+  .zone-note { font-family: var(--hand); font-size: 1.3rem; color: var(--accent); min-height: 1.6rem; margin: 6px 0 0; }
 
-  .next-btn {
-    width: 100%; padding: 12px; border: none;
-    border-radius: 14px; margin-top: 14px;
-    background: linear-gradient(135deg, #ff6b9d, #ff8e53);
-    color: white; font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 16px rgba(255,107,157,0.3);
+  .btn {
+    font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center;
+    display: inline-block; border-radius: 14px; padding: 13px 20px;
+    border: 1.5px solid var(--accent); background: var(--accent); color: var(--accent-ink);
   }
-  .next-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn:hover { filter: brightness(1.06); }
+  .btn:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .btn.on { box-shadow: 0 0 0 3px var(--soft), 0 0 0 5px var(--accent); }
+  .btn[disabled] { opacity: .4; cursor: not-allowed; filter: none; }
 
-  /* Contact buttons */
-  .connect-options { display: flex; flex-direction: column; gap: 10px; }
-  .connect-btn {
-    border-radius: 14px; padding: 13px 16px;
-    color: white; cursor: pointer;
-    transition: all 0.25s; text-align: center;
-    text-decoration: none; display: block;
-    border: 1px solid transparent;
-  }
-  .connect-btn.insta {
-    background: linear-gradient(135deg, rgba(131,58,180,0.25), rgba(253,29,29,0.2), rgba(252,176,69,0.2));
-    border-color: rgba(255,107,157,0.3);
-  }
-  .connect-btn.whatsapp {
-    background: rgba(37,211,102,0.12);
-    border-color: rgba(37,211,102,0.35);
-  }
-  .connect-btn.number {
-    background: rgba(100,160,255,0.12);
-    border-color: rgba(100,160,255,0.35);
-  }
-  .connect-btn:hover { opacity: 0.85; transform: translateY(-2px); }
-  .connect-btn .btn-icon { font-size: 22px; display: block; margin-bottom: 4px; }
-  .connect-btn .btn-title { font-weight: 700; font-size: 14px; color: #ffd6e0; }
-  .connect-btn .btn-sub { font-size: 11px; color: rgba(255,200,210,0.45); margin-top: 2px; }
+  .nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
+  .nav .btn { flex: 1; }
+  .nav .back[hidden] { display: none !important; }
 
-  /* Final */
-  .final-msg { text-align: center; padding: 6px 0; }
-  .final-emoji { font-size: 50px; margin-bottom: 14px; display: block; animation: pulse 1.5s infinite; }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-  }
-  .final-title {
-    font-size: 20px; font-weight: 700; margin-bottom: 12px;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; line-height: 1.3;
-  }
-  .final-sub {
-    font-size: 13px; color: rgba(255,200,210,0.7); line-height: 1.8;
-  }
-  .final-sub b { color: #ffb3c6; }
-  .heart-line { font-size: 18px; display: block; margin: 8px 0; }
+  .done-lead { font-size: 1rem; color: var(--muted); margin: 8px 0 18px; }
+  .review { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .review li { border-top: 1px solid var(--line); padding-top: 10px; min-width: 0; }
+  .review b { display: block; font-size: .8rem; font-weight: 500; color: var(--muted); letter-spacing: .02em; }
+  .review span { overflow-wrap: anywhere; }
+  .actions { display: grid; gap: 10px; margin-top: 22px; }
+  .status { font-family: var(--hand); font-size: 1.3rem; color: var(--accent); margin: 8px 0 0; min-height: 1.5rem; }
 
-  .back-btn {
-    margin-top: 10px; background: none;
-    border: 1px solid rgba(255,107,157,0.2);
-    border-radius: 10px; padding: 8px 16px;
-    color: rgba(255,200,210,0.35); font-size: 11px;
-    cursor: pointer; display: block; width: 100%;
-    transition: all 0.2s;
-  }
-  .back-btn:hover { color: rgba(255,200,210,0.7); border-color: rgba(255,107,157,0.4); }
-
-  .restart-btn {
-    margin-top: 12px;
-    background: rgba(255,107,157,0.12);
-    border: 1px solid rgba(255,107,157,0.25);
-    border-radius: 12px; padding: 10px 16px;
-    color: rgba(255,200,210,0.6); font-size: 12px;
-    cursor: pointer; display: block; width: 100%;
-    transition: all 0.2s;
-  }
-  .restart-btn:hover { background: rgba(255,107,157,0.2); color: white; }
-
-  .saving-msg {
-    font-size: 11px; color: rgba(255,200,210,0.4);
-    text-align: center; margin-top: 10px; min-height: 16px;
+  @media (prefers-reduced-motion: reduce) {
+    .hearts { display: none; }
+    .card .in, .bar i, .zone .no { animation: none; transition: none; }
   }
 </style>
+
 </head>
 <body>
-
-<div class="hearts-bg" id="heartsContainer"></div>
-
-<div class="card" id="mainCard">
-
-  <!-- STEP 1 -->
-  <div class="step active" id="step1">
-    <div class="step-indicator">
-      <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="logo">💼✨</div>
-    <h1>PK Services</h1>
-    <p class="tagline">Hum yahan sabhi type ke online work karte hai ,<br>jaise trading, designing 💕</p>
-    <p class="question">Aap hamare saath kis roop mein judna chahoge?</p>
-    <div class="options">
-      <button class="option-btn" onclick="selectRole('Partner')">
-        <span class="icon">🤝</span>
-        <div><div class="title">Partner</div><div class="desc">Ek saath milke kuch bada banana hai</div></div>
-      </button>
-      <button class="option-btn" onclick="selectRole('Client')">
-        <span class="icon">💼</span>
-        <div><div class="title">Client</div><div class="desc">Humari services se fayda uthana chahte hain</div></div>
-      </button>
-      <button class="option-btn" onclick="selectRole('Collaborator')">
-        <span class="icon">🚀</span>
-        <div><div class="title">Collaborator</div><div class="desc">Saath milke kuch creative karna hai</div></div>
-      </button>
-      <button class="option-btn" onclick="selectRole('Friend')">
-        <span class="icon">😊</span>
-        <div><div class="title">Friend</div><div class="desc">Pehle thoda jaanna chahte hain 💕</div></div>
-      </button>
-    </div>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+<main class="stage">
+  <div class="top">
+    <div class="brand">sirf tumhare liye</div>
+    <div class="count" id="count">1 / 10</div>
   </div>
-
-  <!-- STEP 2 -->
-  <div class="step" id="step2">
-    <div class="step-indicator">
-      <div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="logo">🌸</div>
-    <h1>Apne Baare Mein Batao</h1>
-    <p class="tagline">Hum aapko jaanna chahte hain 💕</p>
-    <div class="form-group">
-      <label>💫 Aapka Naam</label>
-      <input type="text" id="userName" placeholder="Apna naam likho..." />
-    </div>
-    <div class="form-group">
-      <label>🎓 Aap kaha tak padhe ho?</label>
-      <input type="text" id="userQual" placeholder="Student, Engineer, Business..." />
-    </div>
-    <div class="form-group">
-      <label>✨ Hum se kya umeed rakhte ho?</label>
-      <div class="exp-options">
-        <button class="exp-btn" onclick="selectExp(this,'Naye ideas aur guidance chahiye')">💡 Naye ideas aur guidance chahiye</button>
-        <button class="exp-btn" onclick="selectExp(this,'Saath milke kuch khaas banana hai')">🤝 Saath milke kuch khaas banana hai</button>
-        <button class="exp-btn" onclick="selectExp(this,'Bas baat karna, phir dekhte hain')">💬 Bas baat karna, phir dekhte hain</button>
-        <button class="exp-btn" onclick="selectExp(this,'Kuch interesting hoga zaroor')">🌟 Kuch interesting hoga zaroor</button>
-      </div>
-    </div>
-    <button class="next-btn" onclick="goStep3()">Aage Badho 💕</button>
-    <button class="back-btn" onclick="goStep(1)">← Wapas jao</button>
+  <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+  <section class="card" id="card" aria-live="polite"></section>
+  <div class="nav" id="nav">
+    <button class="btn ghost back" id="back" type="button">Peeche</button>
+    <button class="btn" id="next" type="button">Aage</button>
   </div>
-
-  <!-- STEP 3 -->
-  <div class="step" id="step3">
-    <div class="step-indicator">
-      <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
-    </div>
-    <div class="logo">💌</div>
-    <h1>Hum Se Judo!</h1>
-    <p class="tagline">Bas ek kadam aur... hum intezaar mein hain 🌹</p>
-    <div class="connect-options">
-      <a class="connect-btn insta" href="https://instagram.com/drashyamkumar" target="_blank" onclick="goFinal('Instagram')">
-        <span class="btn-icon">📸</span>
-        <div class="btn-title">Instagram</div>
-        <div class="btn-sub">@YOUR_INSTA_ID • DM karo 💜</div>
-      </a>
-      <a class="connect-btn whatsapp" href="https://api.whatsapp.com/send?phone=919289394105&text=Say%20Hi%20to%20Pankaj%20%F0%9F%91%8B" target="_blank" onclick="goFinal('WhatsApp')">
-        <span class="btn-icon">💬</span>
-        <div class="btn-title">WhatsApp</div>
-        <div class="btn-sub">Message karo seedha 💚</div>
-      </a>
-      <a class="connect-btn number" href="tel:+919289394105" onclick="goFinal('Call')">
-        <span class="btn-icon">📞</span>
-        <div class="btn-title">Contact Number</div>
-        <div class="btn-sub">Call karo ya save karo 💙</div>
-      </a>
-    </div>
-    <button class="back-btn" onclick="goStep(2)">← Wapas jao</button>
-  </div>
-
-  <!-- STEP 4 -->
-  <div class="step" id="step4">
-    <div class="step-indicator">
-      <div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
-    </div>
-    <div class="final-msg">
-      <span class="final-emoji">💖</span>
-      <div class="final-title" id="finalTitle">Say Hi to Pankaj! 👋</div>
-      <p class="final-sub" id="finalText"></p>
-      <div class="saving-msg" id="savingMsg"></div>
-      <button class="restart-btn" onclick="restart()">🔄 Shuru se dobara karo</button>
-    </div>
-  </div>
-
-</div>
+</main>
 
 <script>
+(function () {
+  var LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  var SONGS = ['Majaal', 'Sun Ranjheya', 'Kinna Sona', 'Maine Khud Ko'];
+  var WHY = ['Dar gharwalo ka', 'Mujhe aap mein interest nahi hai', 'Kisi se baat karti hu'];
+  var state = { i: 0, a: {} };
+  var cleanup = null;
   var SHEET_URL = "https://script.google.com/macros/s/AKfycbzty7Kl2rm1OTspXbsKHAfv6X3lo6Jxcm8wI-4EWCRb9JWtK0xjY0zTsaz_a3Hoj87WjQ/exec";
-  var userData = { role:'', name:'', qualification:'', expectation:'', contact:'' };
+  var KEYS = ['naam_letter', 'khana_khaya', 'pyaar', 'online_baat_kyu_nahi', 'phone_pe_kisse', 'gaana_yaad', 'mere_gaane_pasand', 'block_kyu', 'baat_kaise', 'sawal_ya_baat'];
+  function makeSid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+  var SID = makeSid();
+  var saveTimer = null;
+  function saveToSheet(final) {
+    clearTimeout(saveTimer);
+    if (!SHEET_URL) return;
+    if (!Object.keys(state.a).length && !wrong) return;
+    var payload = {
+      sessionId: SID,
+      time: new Date().toISOString(),
+      status: final ? 'completed' : (wrong >= MAX_WRONG ? 'locked' : 'in progress'),
+      step: Math.min(state.i + 1, steps.length),
+      wrongLetterAttempts: wrong,
+      locked: wrong >= MAX_WRONG,
+      letter_chuna: state.a.letter || ''
+    };
+    steps.forEach(function (s, idx) {
+      var ok = false;
+      try { ok = idx <= state.i && s.valid(); } catch (e) { ok = false; }
+      payload[KEYS[idx]] = ok ? s.answer() : '';
+    });
+    try {
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  var MAX_WRONG = 3;
+  var wrong = 0;
+  try { wrong = parseInt(localStorage.getItem('dkb-wrong'), 10) || 0; } catch (e) { wrong = 0; }
+  function saveWrong() { try { localStorage.setItem('dkb-wrong', String(wrong)); } catch (e) {} }
+  var card = document.getElementById('card');
+  var nextBtn = document.getElementById('next');
+  var backBtn = document.getElementById('back');
+  var navEl = document.getElementById('nav');
+  var countEl = document.getElementById('count');
+  var barEl = document.getElementById('bar');
 
-  // Floating hearts
-  var emojis = ['💕','💖','💗','💓','🌹','✨','💫','🌸'];
-  var container = document.getElementById('heartsContainer');
-  for (var i = 0; i < 14; i++) {
-    var h = document.createElement('div');
-    h.className = 'heart-float';
-    h.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-    h.style.left = Math.random() * 100 + 'vw';
-    h.style.fontSize = (12 + Math.random() * 14) + 'px';
-    h.style.animationDuration = (8 + Math.random() * 12) + 's';
-    h.style.animationDelay = (Math.random() * 10) + 's';
-    container.appendChild(h);
+  function el(tag, attrs) {
+    var n = document.createElement(tag);
+    attrs = attrs || {};
+    Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c == null) continue;
+      n.append(typeof c === 'string' ? document.createTextNode(c) : c);
+    }
+    return n;
   }
 
-  function goStep(n) {
-    document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
-    document.getElementById('step'+n).classList.add('active');
-    document.getElementById('mainCard').scrollTop = 0;
+  function radios(key, opts, onPick) {
+    var wrap = el('div', { 'class': 'opts', role: 'radiogroup' });
+    opts.forEach(function (o, idx) {
+      var id = key + '-' + idx;
+      var input = el('input', { type: 'radio', name: key, id: id, value: o });
+      input.checked = state.a[key] === o;
+      var lab = el('label', { 'for': id, 'class': 'opt' + (input.checked ? ' on' : '') }, input, el('span', {}, o));
+      input.addEventListener('change', function () {
+        state.a[key] = o;
+        wrap.querySelectorAll('.opt').forEach(function (l) {
+          l.classList.toggle('on', l.querySelector('input').checked);
+        });
+        if (onPick) onPick(o);
+        update();
+      });
+      wrap.append(lab);
+    });
+    return wrap;
   }
 
-  function selectRole(role) { userData.role = role; goStep(2); }
-
-  function selectExp(btn, val) {
-    document.querySelectorAll('.exp-btn').forEach(function(b){ b.classList.remove('selected'); });
-    btn.classList.add('selected');
-    userData.expectation = val;
+  function textField(key, id, placeholder, multi) {
+    var f = multi ? el('textarea', { 'class': 'field', id: id, placeholder: placeholder })
+                  : el('input', { 'class': 'field', id: id, type: 'text', placeholder: placeholder, autocomplete: 'off' });
+    f.value = state.a[key] || '';
+    f.addEventListener('input', function () { state.a[key] = f.value.trim(); update(); });
+    return f;
   }
 
-  function goStep3() {
-    var name = document.getElementById('userName').value.trim();
-    var qual = document.getElementById('userQual').value.trim();
-    if (!name) { alert('Apna naam toh batao! 💕'); return; }
-    if (!qual) { alert('Profession bhi batao na! 😊'); return; }
-    if (!userData.expectation) { alert('Ek option zaroor choose karo! ✨'); return; }
-    userData.name = name;
-    userData.qualification = qual;
-    goStep(3);
+  function head(q, hint) {
+    var frag = document.createDocumentFragment();
+    frag.append(el('h1', { 'class': 'q' }, q));
+    if (hint) frag.append(el('p', { 'class': 'hint' }, hint));
+    return frag;
   }
 
-  function goFinal(contact) {
-    userData.contact = contact;
-    setTimeout(function() {
-      document.getElementById('finalTitle').innerHTML = 'Shukriya ' + userData.name + '! 💖';
-      document.getElementById('finalText').innerHTML =
-        '<span class="heart-line">💕 💕 💕</span>' +
-        'Pankaj ko bahut khushi hogi<br>' +
-        '<b>wo hamesha ready rahte hai chahe business ho, collaboration ho, ya bas ek achhi dosti! 🌟💖"...</b><br>Jaldi Say Hi karo! 🌹<br><br>' +
-        '<span style="font-size:11px;color:rgba(255,200,210,0.35);">' +
-        userData.role + ' • ' + userData.qualification + '<br>' + userData.expectation + '</span>';
-      goStep(4);
-      saveToSheet();
-    }, 300);
-  }
-   
+  var steps = [
+    {
+      short: 'Naam ka pehla letter',
+      render: function (box) {
+        box.append(head('Aapke naam ka pehla letter kya hai?', 'Dropdown se chuno'));
+        var sel = el('select', { id: 'letter', 'aria-label': 'Naam ka pehla letter' });
+        sel.append(el('option', { value: '' }, 'Letter chuno'));
+        LETTERS.forEach(function (l) { sel.append(el('option', { value: l }, l)); });
+        sel.value = state.a.letter || '';
+        var msg = el('p', { 'class': 'zone-note' });
+        function say() {
+          msg.textContent = state.a.letter && state.a.letter !== 'N'
+            ? 'Ye letter sahi nahi hai. ' + (MAX_WRONG - wrong) + ' koshish bachi hai.' : '';
+        }
+        sel.addEventListener('change', function () {
+          state.a.letter = sel.value;
+          if (sel.value && sel.value !== 'N') {
+            wrong++;
+            saveWrong();
+            saveToSheet(false);
+            if (wrong >= MAX_WRONG) { show(); return; }
+          }
+          say();
+          update();
+        });
+        box.append(sel, msg);
+        say();
+      },
+      valid: function () { return state.a.letter === 'N'; },
+      answer: function () { return state.a.letter; }
+    },
+    {
+      short: 'Khana khaya',
+      render: function (box) {
+        box.append(head('Aapne khana khaya?'));
+        var sub = el('div', { 'class': 'sub' });
+        sub.append(el('label', { 'class': 'label', 'for': 'food' }, 'Kya khaya?'));
+        sub.append(textField('food', 'food', 'Yahan likho'));
+        sub.hidden = state.a.khana !== 'Ha';
+        box.append(radios('khana', ['Ha', 'Na'], function (o) { sub.hidden = o !== 'Ha'; }));
+        box.append(sub);
+      },
+      valid: function () { return state.a.khana === 'Na' || (state.a.khana === 'Ha' && !!state.a.food); },
+      answer: function () { return state.a.khana === 'Ha' ? 'Ha (' + state.a.food + ')' : state.a.khana; }
+    },
+    {
+      short: 'Kya tumhe mujhse pyaar hai',
+      render: function (box) {
+        box.append(head('Kya tumhe mujhse pyaar hai?'));
+        var zone = el('div', { 'class': 'zone' });
+        var yes = el('button', { 'class': 'btn yes', type: 'button' }, 'Yes');
+        var no = el('button', { 'class': 'btn no', type: 'button' }, 'No');
+        var note = el('p', { 'class': 'zone-note' }, state.a.pyaar === 'Yes' ? 'Pata tha mujhe' : '');
+        var dodges = 0, px = -999, py = -999;
+        if (state.a.pyaar === 'Yes') yes.classList.add('on');
+        zone.append(yes, no);
+        function move() {
+          var z = zone.getBoundingClientRect();
+          var y = yes.getBoundingClientRect();
+          var w = no.offsetWidth, h = no.offsetHeight;
+          var x = 0, t = 0, tries = 0, clash;
+          do {
+            x = Math.random() * Math.max(0, z.width - w);
+            t = Math.random() * Math.max(0, z.height - h);
+            var l = x + z.left, tp = t + z.top;
+            clash = l < y.right + 8 && l + w > y.left - 8 && tp < y.bottom + 8 && tp + h > y.top - 8;
+            if (!clash && px > -999) clash = Math.hypot(l + w / 2 - px, tp + h / 2 - py) < 130;
+            tries++;
+          } while (clash && tries < 40);
+          no.style.left = x + 'px';
+          no.style.top = t + 'px';
+          dodges++;
+          if (state.a.pyaar !== 'Yes') {
+            note.textContent = dodges > 4 ? 'No ko pakadna mushkil hai, Yes dabao na' : '';
+          }
+        }
+        function setP(x, y) { if (x != null) { px = x; py = y; } }
+        ['pointerenter', 'pointerdown', 'focus'].forEach(function (ev) {
+          no.addEventListener(ev, function (e) {
+            if (ev === 'pointerdown') e.preventDefault();
+            setP(e.clientX, e.clientY);
+            move();
+          });
+        });
+        no.addEventListener('touchstart', function (e) {
+          e.preventDefault();
+          if (e.touches[0]) setP(e.touches[0].clientX, e.touches[0].clientY);
+          move();
+        }, { passive: false });
+        function near(e) {
+          var r = no.getBoundingClientRect();
+          var dx = Math.max(r.left - e.clientX, 0, e.clientX - r.right);
+          var dy = Math.max(r.top - e.clientY, 0, e.clientY - r.bottom);
+          if (Math.hypot(dx, dy) < 70) { setP(e.clientX, e.clientY); move(); }
+        }
+        document.addEventListener('pointermove', near);
+        cleanup = function () { document.removeEventListener('pointermove', near); };
+        no.addEventListener('click', function (e) { e.preventDefault(); move(); });
+        yes.addEventListener('click', function () {
+          state.a.pyaar = 'Yes';
+          yes.classList.add('on');
+          note.textContent = 'Pata tha mujhe';
+          update();
+        });
+        box.append(zone, note);
+      },
+      valid: function () { return state.a.pyaar === 'Yes'; },
+      answer: function () { return state.a.pyaar; }
+    },
+    {
+      short: 'Online baat kyu nahi kar sakte',
+      render: function (box) {
+        box.append(head('Hum online baat kyu nahi kar sakte?', 'Jo sach hai wahi chuno'));
+        box.append(radios('online', WHY));
+        box.append(el('label', { 'class': 'label', 'for': 'onlineNote' }, 'Kuch aur batana ho toh yahan likho (zaroori nahi)'));
+        box.append(textField('onlineNote', 'onlineNote', 'Yahan likho'));
+      },
+      valid: function () { return !!state.a.online; },
+      answer: function () { return state.a.online + (state.a.onlineNote ? ' (' + state.a.onlineNote + ')' : ''); }
+    },
+    {
+      short: 'Phone pe kisse baat',
+      render: function (box) {
+        box.append(head('Aur tum phone pe kisse baat karti rahti ho? 😠'));
+        box.append(radios('phone', ['Friend', 'Relative', 'Ex', 'Bf']));
+        box.append(el('label', { 'class': 'label', 'for': 'phoneNote' }, 'Kuch aur batana ho toh yahan likho (zaroori nahi)'));
+        box.append(textField('phoneNote', 'phoneNote', 'Yahan likho'));
+      },
+      valid: function () { return !!state.a.phone; },
+      answer: function () { return state.a.phone + (state.a.phoneNote ? ' (' + state.a.phoneNote + ')' : ''); }
+    },
+    {
+      short: 'Gaana',
+      render: function (box) {
+        box.append(head('Koi aisa gaana batao jise sunke tum mujhe yaad karti ho, ya yaad nahi karti?'));
+        var sub = el('div', { 'class': 'sub' });
+        sub.append(el('label', { 'class': 'label', 'for': 'song' }, 'Kaunsa gaana?'));
+        sub.append(textField('song', 'song', 'Gaane ka naam likho'));
+        sub.hidden = state.a.yaad !== 'Karti hu';
+        box.append(radios('yaad', ['Karti hu', 'Yaad nahi karti'], function (o) { sub.hidden = o !== 'Karti hu'; }));
+        box.append(sub);
+      },
+      valid: function () {
+        return state.a.yaad === 'Yaad nahi karti' || (state.a.yaad === 'Karti hu' && !!state.a.song);
+      },
+      answer: function () {
+        return state.a.yaad === 'Karti hu' ? 'Karti hu - ' + state.a.song : state.a.yaad;
+      }
+    },
+    {
+      short: 'Mere gaanon mein se pasand',
+      render: function (box) {
+        box.append(head('Mere favourite gaane, jinhe sunke main tumhe yaad karta hu', 'Inme se jo tumhe pasand ho wo chuno (zaroori nahi)'));
+        if (!state.a.favs) state.a.favs = [];
+        var chips = el('div', { 'class': 'chips' });
+        SONGS.forEach(function (s) {
+          var c = el('button', { 'class': 'chip' + (state.a.favs.indexOf(s) > -1 ? ' on' : ''), type: 'button', 'aria-pressed': state.a.favs.indexOf(s) > -1 ? 'true' : 'false' }, s);
+          c.addEventListener('click', function () {
+            var at = state.a.favs.indexOf(s);
+            if (at > -1) state.a.favs.splice(at, 1); else state.a.favs.push(s);
+            c.classList.toggle('on', at === -1);
+            c.setAttribute('aria-pressed', at === -1 ? 'true' : 'false');
+          });
+          chips.append(c);
+        });
+        box.append(chips);
+      },
+      valid: function () { return true; },
+      answer: function () { return state.a.favs && state.a.favs.length ? state.a.favs.join(', ') : 'Koi nahi chuna'; }
+    },
+    {
+      short: 'Baar baar block kyu',
+      render: function (box) {
+        box.append(head('Aap baar baar block kyu karti ho?', 'Jo sach hai wahi chuno'));
+        box.append(radios('block', WHY));
+        box.append(el('label', { 'class': 'label', 'for': 'blockNote' }, 'Kuch aur batana ho toh yahan likho (zaroori nahi)'));
+        box.append(textField('blockNote', 'blockNote', 'Yahan likho'));
+      },
+      valid: function () { return !!state.a.block; },
+      answer: function () { return state.a.block + (state.a.blockNote ? ' (' + state.a.blockNote + ')' : ''); }
+    },
+    {
+      short: 'Is tarah baat karein',
+      render: function (box) {
+        box.append(head('Kya hum is tarah baat kar sakte hain?'));
+        box.append(radios('freq', ['Har din', '4 din mein ek baar', 'Har week', 'Nahi']));
+      },
+      valid: function () { return !!state.a.freq; },
+      answer: function () { return state.a.freq; }
+    },
+    {
+      short: 'Sawal ya kuch bolna',
+      render: function (box) {
+        box.append(head('Aapka koi sawal ya kuch bolna ho toh yahan likh do.', 'Kal main jawab dunga'));
+        box.append(textField('note', 'note', 'Yahan likho (khaali chhod sakti ho)', true));
+      },
+      valid: function () { return true; },
+      answer: function () { return state.a.note || '-'; }
+    }
+  ];
 
-  function saveToSheet() {
-    var msg = document.getElementById('savingMsg');
-    msg.innerText = '💾 Save ho raha hai...';
-    fetch(SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData)
-    }).then(function() {
-      msg.innerText = '✅ Saved!';
-      setTimeout(function(){ msg.innerText = ''; }, 2000);
-    }).catch(function() { msg.innerText = ''; });
+  function buildSummary() {
+    var lines = ['Mere jawab:'];
+    steps.forEach(function (s, idx) { lines.push((idx + 1) + '. ' + s.short + ': ' + (s.answer() || '-')); });
+    return lines.join('\n');
   }
 
-  function restart() {
-    userData = { role:'', name:'', qualification:'', expectation:'', contact:'' };
-    document.getElementById('userName').value = '';
-    document.getElementById('userQual').value = '';
-    document.querySelectorAll('.exp-btn').forEach(function(b){ b.classList.remove('selected'); });
-    goStep(1);
+  function update() {
+    if (state.i < steps.length) {
+      nextBtn.disabled = !steps[state.i].valid();
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () { saveToSheet(false); }, 1200);
+    }
   }
+
+  function show() {
+    if (cleanup) { cleanup(); cleanup = null; }
+    card.textContent = '';
+    var box = el('div', { 'class': 'in' });
+    card.append(box);
+    if (wrong >= MAX_WRONG) {
+      navEl.hidden = true;
+      countEl.textContent = 'Lock';
+      barEl.style.width = '0';
+      box.append(el('h2', { 'class': 'q' }, 'Ye page ab lock ho gaya.'));
+      box.append(el('p', { 'class': 'done-lead' }, 'Teen baar galat letter chuna gaya, isliye ab aage nahi badh sakte.'));
+      return;
+    }
+    if (state.i >= steps.length) { showDone(box); return; }
+    navEl.hidden = false;
+    countEl.textContent = (state.i + 1) + ' / ' + steps.length;
+    barEl.style.width = ((state.i + 1) / steps.length * 100) + '%';
+    backBtn.hidden = state.i === 0;
+    nextBtn.textContent = state.i === steps.length - 1 ? 'Jawab bhejo' : 'Aage';
+    steps[state.i].render(box);
+    update();
+    window.scrollTo(0, 0);
+  }
+
+  function showDone(box) {
+    navEl.hidden = true;
+    countEl.textContent = 'Ho gaya';
+    barEl.style.width = '100%';
+    var text = buildSummary();
+    box.append(el('h2', { 'class': 'q' }, 'Shukriya, jawab dene ke liye.'));
+    box.append(el('p', { 'class': 'done-lead' }, 'Tumhare jawab mujhe mil gaye.'));
+    var list = el('ul', { 'class': 'review' });
+    steps.forEach(function (s) {
+      list.append(el('li', {}, el('b', {}, s.short), el('span', {}, s.answer() || '-')));
+    });
+    box.append(list);
+    var status = el('p', { 'class': 'status' });
+    var wa = el('a', {
+      'class': 'btn', target: '_blank', rel: 'noopener noreferrer',
+      href: 'https://wa.me/?text=' + encodeURIComponent(text)
+    }, 'WhatsApp pe bhejo');
+    var copy = el('button', { 'class': 'btn ghost', type: 'button' }, 'Jawab copy karo');
+    var fallback = el('textarea', { 'class': 'field', readonly: 'readonly', id: 'fallback' });
+    fallback.value = text;
+    fallback.hidden = true;
+    copy.addEventListener('click', function () {
+      function manual() {
+        fallback.hidden = false;
+        fallback.focus();
+        fallback.select();
+        status.textContent = 'Text select kar diya, ab copy kar lo.';
+      }
+      try {
+        navigator.clipboard.writeText(text).then(function () {
+          status.textContent = 'Copy ho gaya.';
+        }, manual);
+      } catch (e) { manual(); }
+    });
+    var again = el('button', { 'class': 'btn ghost', type: 'button' }, 'Phir se bharo');
+    again.addEventListener('click', function () { state = { i: 0, a: {} }; show(); });
+    window.scrollTo(0, 0);
+  }
+
+  nextBtn.addEventListener('click', function () {
+    if (!steps[state.i].valid()) return;
+    state.i++;
+    saveToSheet(state.i >= steps.length);
+    show();
+  });
+  backBtn.addEventListener('click', function () {
+    if (state.i > 0) { state.i--; show(); }
+  });
+
+  var hearts = document.getElementById('hearts');
+  for (var h = 0; h < 14; h++) {
+    var s = document.createElement('span');
+    s.textContent = '♥';
+    s.style.left = (Math.random() * 96) + '%';
+    s.style.fontSize = (14 + Math.random() * 26) + 'px';
+    s.style.animationDuration = (14 + Math.random() * 16) + 's';
+    s.style.animationDelay = (-Math.random() * 24) + 's';
+    hearts.append(s);
+  }
+
+  function checkReset() {
+    if (location.hash !== '#reset-n7k2') return false;
+    wrong = 0;
+    try { localStorage.removeItem('dkb-wrong'); } catch (e) {}
+    state = { i: 0, a: {} };
+    return true;
+  }
+  window.addEventListener('hashchange', function () { if (checkReset()) show(); });
+  checkReset();
+  show();
+})();
 </script>
+
 </body>
 </html>
