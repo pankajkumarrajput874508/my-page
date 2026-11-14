@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}</style>
-<title>Dil Ki Baat</title>
+<title>Quiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Figtree:wght@400;500;600&family=Gloock&display=swap">
@@ -38,6 +38,9 @@
   .hearts { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
   .hearts span { position: absolute; bottom: -12%; color: var(--heart); opacity: .35; animation: rise linear infinite; }
   @keyframes rise { from { transform: translateY(0) rotate(-8deg); } to { transform: translateY(-120vh) rotate(10deg); } }
+  /* Pehla page: koi romantic cheez nahi */
+  body.plain .hearts { display: none; }
+  body.plain .brand { font-family: var(--body); font-size: 1rem; font-weight: 600; color: var(--muted); }
   .stage { position: relative; z-index: 1; max-width: 30rem; margin: 0 auto; }
   .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
   .brand { font-family: var(--hand); font-size: 1.6rem; line-height: 1; color: var(--accent); }
@@ -50,6 +53,7 @@
   h1, h2 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; }
   .q { font-size: 1.65rem; line-height: 1.2; margin-bottom: 8px; }
   .hint { font-family: var(--hand); font-size: 1.25rem; color: var(--muted); margin: 0 0 18px; line-height: 1.2; }
+  .rom { font-family: var(--hand); font-size: 1.35rem; color: var(--accent); margin: 0 0 10px; line-height: 1.2; }
   .opts { display: grid; gap: 10px; margin-top: 18px; }
   .opt {
     display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg);
@@ -126,11 +130,11 @@
   }
 </style>
 </head>
-<body>
+<body class="plain">
 <div class="hearts" id="hearts" aria-hidden="true"></div>
 <main class="stage">
   <div class="top">
-    <div class="brand">sirf tumhare liye</div>
+    <div class="brand" id="brand">Quiz</div>
     <div class="count" id="count">1 / 10</div>
   </div>
   <div class="bar" aria-hidden="true"><i id="bar"></i></div>
@@ -154,6 +158,19 @@
     'Main intezaar karunga, aur kal tumhare har sawal ka jawab dunga.'
   ];
   var LOVE_SIGN = 'ok bye';
+
+  // Page 2 se aage ki romantic lines (page 1 pe koi nahi)
+  var ROM = {
+    1: 'Tumhara khayal rakhna mujhe achha lagta hai ♥',
+    2: 'Dil ki baat, seedha dil se ♥',
+    3: 'Tumse baat karne ka bahana dhoondhta hu ♥',
+    4: 'Tumhari har baat mere liye khaas hai ♥',
+    5: 'Gaano mein bhi tum hi yaad aati ho ♥',
+    6: 'Ye saare gaane tumhare naam ♥',
+    7: 'Tumse shikayat nahi, bas tumhe samajhna chahta hu ♥',
+    8: 'Tumse baat karke sukoon milta hai ♥',
+    9: 'Tumhari baat sunne ko dil betaab hai ♥'
+  };
 
   function burstHearts() {
     var layer = document.createElement('div');
@@ -215,6 +232,13 @@
   var navEl = document.getElementById('nav');
   var countEl = document.getElementById('count');
   var barEl = document.getElementById('bar');
+  var brandEl = document.getElementById('brand');
+
+  function setRomantic(on) {
+    document.body.classList.toggle('plain', !on);
+    brandEl.textContent = on ? 'sirf tumhare liye' : 'Quiz';
+    document.title = on ? 'Dil Ki Baat' : 'Quiz';
+  }
 
   function el(tag, attrs) {
     var n = document.createElement(tag);
@@ -490,6 +514,7 @@
     var box = el('div', { 'class': 'in' });
     card.append(box);
     if (wrong >= MAX_WRONG) {
+      setRomantic(false);
       navEl.hidden = true;
       countEl.textContent = 'Lock';
       barEl.style.width = '0';
@@ -497,13 +522,17 @@
       box.append(el('p', { 'class': 'done-lead' }, 'Teen baar galat letter chuna gaya, isliye ab aage kabhi nahi badh sakte.'));
       return;
     }
-    if (state.i >= steps.length) { showDone(box); return; }
+    if (state.i >= steps.length) { setRomantic(true); showDone(box); return; }
+    setRomantic(state.i > 0);
     navEl.hidden = false;
     countEl.textContent = (state.i + 1) + ' / ' + steps.length;
     barEl.style.width = ((state.i + 1) / steps.length * 100) + '%';
     backBtn.hidden = state.i === 0;
     nextBtn.textContent = state.i === steps.length - 1 ? 'Jawab bhejo' : 'Aage';
     steps[state.i].render(box);
+    if (state.i > 0 && ROM[state.i] && box.firstChild) {
+      box.firstChild.after(el('p', { 'class': 'rom' }, ROM[state.i]));
+    }
     update();
     window.scrollTo(0, 0);
   }
